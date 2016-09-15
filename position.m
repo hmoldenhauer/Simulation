@@ -22,7 +22,7 @@ function varargout = position(varargin)
 
 % Edit the above text to modify the response to help position
 
-% Last Modified by GUIDE v2.5 15-Sep-2016 12:01:09
+% Last Modified by GUIDE v2.5 15-Sep-2016 14:35:45
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -58,9 +58,19 @@ addpath(genpath('..\Simulation\'));
 % load folder with stl data
 addpath(genpath('..\..\Hardware\'));
 
-
 [vertices, faces, normals, name] = stlRead('Resonator_assembly.stl');
-stlPlot(vertices, faces, name);
+[vertices_p, faces_p, normals_p, name_p] = stlRead('Resonator_assembly_Plunger_6.stl');
+[vertices_h, faces_h, normals_h, name_h] = stlRead('Resonator_assembly_Sample_Holder_full_7.stl');
+
+object.vertices = vertices;
+object.faces = faces;
+
+patch(object, 'FaceColor', [0.8 0.8 1.0],...
+              'EdgeColor', 'none');
+axis('image');
+view([-135 35]);
+grid on;
+title(name);
 
 % Choose default command line output for position
 handles.output = hObject;
@@ -83,9 +93,18 @@ function varargout = position_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
+% --- Executes during object creation, after setting all properties.
+function axes1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: place code in OpeningFcn to populate axes1
+
+
 % --- Executes on slider movement.
-function slider1_Callback(hObject, eventdata, handles)
-% hObject    handle to slider1 (see GCBO)
+function move_plug_Callback(hObject, eventdata, handles)
+% hObject    handle to move_plug (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -94,8 +113,8 @@ function slider1_Callback(hObject, eventdata, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function slider1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider1 (see GCBO)
+function move_plug_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to move_plug (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -105,10 +124,23 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
 end
 
 
+% --- Executes on slider movement.
+function move_holder_Callback(hObject, eventdata, handles)
+% hObject    handle to move_holder (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
 % --- Executes during object creation, after setting all properties.
-function axes1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to axes1 (see GCBO)
+function move_holder_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to move_holder (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
-% Hint: place code in OpeningFcn to populate axes1
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end

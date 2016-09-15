@@ -6,27 +6,38 @@ addpath(genpath('..\Simulation\'));
 % load folder with stl data
 addpath(genpath('..\..\Hardware\'));
 
+% generate filenames
+resonator = 'Resonator_assembly_CuBO';
+plunger = 'Plunger_6';
+holder = 'Sample_Holder_full_7';
+sample = 'CuBO_Sample_1,1x1,1x0,5_8';
+
+plunger = strcat(resonator, '_', plunger, '.stl');
+holder = strcat(resonator, '_', holder, '.stl');
+sample = strcat(resonator, '_', sample, '.stl');
+resonator = strcat(resonator, '.stl');
+
 % read stl files
 %   faces contains only the indices of vertices that belong to one face
-[vertices, faces, normals, name] = stlRead('Resonator_assembly.stl');
-[vertices_p, faces_p, normals_p, name_p] = stlRead('Resonator_assembly_Plunger_6.stl');
-[vertices_h, faces_h, normals_h, name_h] = stlRead('Resonator_assembly_Sample_Holder_full_7.stl');
+[vertices, faces, normals, name] = stlRead(resonator);
+[vertices_p, faces_p, normals_p, name_p] = stlRead(plunger);
+[vertices_h, faces_h, normals_h, name_h] = stlRead(holder);
+[vertices_s, faces_s, normals_s, name_s] = stlRead(sample);
 
-% change coordinate System, so that z is in z direction
-vmoved(:,1) = vertices(:,1);
-vmoved(:,2) = vertices(:,3);
-vmoved(:,3) = vertices(:,2);
+% save starting parameters
+vmani = vertices;
+hmani = vertices_h;
+pmani = vertices_p;
+smani = vertices_s;
 
-% check if points are in Resonator and get indices
-[Lia_h, Loc_h] = ismember(vertices_h, vertices, 'rows');
-[Lia_p, Loc_p] = ismember(vertices_p, vertices, 'rows');
+% holder and sample have to be manipulated the same way
+[vmani,hmani] = manipulateVertices(hmani, vmani, 2, -1.5);
+[vmani,smani] = manipulateVertices(smani, vmani, 2, -1.5);
 
-% move the of plunger and sample holder
-vmoved(Loc_h,3) = vmoved(Loc_h,3) + 10;
-vmoved(Loc_p,3) = vmoved(Loc_p,3) + 10;
+[vmani,pmani] = manipulateVertices(pmani, vmani, 2, -1.5);
 
 % plot to check if everything correct
-stlPlot(vmoved,faces,name);
+stlPlot(vmani,faces,name);
 
 model = createpde;
 %test = geometryFromMesh(model, vertices, faces);
