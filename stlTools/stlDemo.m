@@ -3,7 +3,7 @@
 %% EXAMPLE 1.- How to cut a sphere and close the base to get a semisphere
 
 % load an ascii STL sample file (STLGETFORMAT and STLREADASCII)
-[vertices,faces,normals,name] = stlRead('sphere300faces.stl');
+[vertices,faces,normals,name] = stlRead('sphere_ascii.stl');
 stlPlot(vertices,faces,name);
 
 % the sphere is centered in the origin

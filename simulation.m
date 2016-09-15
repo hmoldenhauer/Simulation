@@ -6,15 +6,30 @@ addpath(genpath('..\Simulation\'));
 % load folder with stl data
 addpath(genpath('..\..\Hardware\'));
 
-% read an stl file
-[vertices_reflector, faces_reflector, normals_reflector, name_reflector] = stlRead('Reflector.stl');
-[vertices_cover, faces_cover, normals_cover, name_cover] = stlRead('Cover.stl');
+% read stl files
+%   faces contains only the indices of vertices that belong to one face
+[vertices, faces, normals, name] = stlRead('Resonator_assembly.stl');
+[vertices_p, faces_p, normals_p, name_p] = stlRead('Resonator_assembly_Plunger_6.stl');
+[vertices_h, faces_h, normals_h, name_h] = stlRead('Resonator_assembly_Sample_Holder_full_7.stl');
 
-%stlWrite('test.stl', [faces_cover], [vertices_cover]);
+% change coordinate System, so that z is in z direction
+vmoved(:,1) = vertices(:,1);
+vmoved(:,2) = vertices(:,3);
+vmoved(:,3) = vertices(:,2);
 
-%model = createpde;
-%test = importGeometry(model, 'test.stl');
-vertices_reflector = vertices_reflector+50;
+% check if points are in Resonator and get indices
+[Lia_h, Loc_h] = ismember(vertices_h, vertices, 'rows');
+[Lia_p, Loc_p] = ismember(vertices_p, vertices, 'rows');
+
+% move the of plunger and sample holder
+vmoved(Loc_h,3) = vmoved(Loc_h,3) + 10;
+vmoved(Loc_p,3) = vmoved(Loc_p,3) + 10;
+
+% plot to check if everything correct
+stlPlot(vmoved,faces,name);
+
+model = createpde;
+%test = geometryFromMesh(model, vertices, faces);
+%test = importGeometry(model, 'Resonator_assembly.stl');
 % plot the data
-stlPlot([vertices_cover;vertices_reflector], [faces_cover;faces_reflector], name_cover);
 %pdegplot(model);
